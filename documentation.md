@@ -1,4 +1,4 @@
 - [Python module for GPIO](https://pythonhosted.org/RPIO/)
 - [Pinout book](https://pinouts.org/)
-- [Node website](https://n-o-d-e.net/pinouts.html)
+- [Node website](https://n-o-d-e.net/pinouts.html)  
 -[Load cell tutorial](https://youtu.be/lWFiKMSB_4M)
