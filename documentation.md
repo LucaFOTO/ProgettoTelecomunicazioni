@@ -1,0 +1,3 @@
+- [Python module for GPIO](https://pythonhosted.org/RPIO/)
+- [Pinout book](https://pinouts.org/)
+- [Node website](https://n-o-d-e.net/pinouts.html)
