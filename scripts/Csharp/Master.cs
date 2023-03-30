@@ -6,8 +6,9 @@ namespace scripts.Csharp
     {
         static void Main(string[] args)
         {
-            Random r = new Random();
-            Console.WriteLine(r.NextDouble());
+            int acac = 0;
+            acac
+            Console.WriteLine("Ciao Mondo!");
         }
     }
 }

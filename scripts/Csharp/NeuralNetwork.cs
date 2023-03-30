@@ -1,9 +1,5 @@
 using System;
 
-//TODO: Convert all base values to floats 
-//TODO: LOAD INPUT -> Network method
-//TODO: FIND output -> Network method
-
 public class NeuralNetwork
 {
     /// <summary>
@@ -27,13 +23,14 @@ public class NeuralNetwork
         {
             throw new LayerLengthMismatch("The number of layers in the network does not match the length of the array containing the number of nodes per layer");
         }
-        layers = new Layer[2 + NumberOfHiddenLayers];
-        layers[0] = new Layer(nodesInInput);
-        for (int i = 0; i < (length - 1); i++)
+
+        layers = new Layer [(2 + numberOfHiddenLayers)];
+        
+        layers[0] = new Layer(numberOfNodesPerLayer[0], 0);
+        for (int i = 1; i < layers.Length; i++)
         {
-            layers[i] = new Layer(NumberOfNodesPerLayer[i]);
+            layers[i] = new Layer(numberOfNodesPerLayer[i], numberOfNodesPerLayer[i - 1]);
         }
-        layers[(length - 1)] = new Layer(nodesInOutput);
     }
     public void randomWeights(int a)
     {
@@ -57,23 +54,24 @@ public class NeuralNetwork
             layers[i].calculate(layers[i - 1]);
         }
     }
-
     public void loadInput(double[] values)
     {
         /// <summary>
         /// Loads values in the input layer using an array of doubles.
         /// </summary>
         /// <exception cref="LayerLengthMismatch">
-        /// Thrown when the array lengths of the values and the nodes in the layer do not correspond.
+        /// Thrown when the array lengths of the values and the nodes in the layer do not correspond. (Actually the esception is thrown by the <c>Layer.setNodesValues</c> method)
         /// </exception>
-        if (nodes.Length != values.Length)
-        {
-            throw new LayerLengthMismatch("The length of the input values array is different from the number of nodes in the input layer");
-        }
-
-        Node[] nodes = layers[0].getNodes();
-
-        //TODO: finish
+        /// <param name="double[] : values">Array of doubles containing the values to be loaded in the input layer</param>
+        
+        layers[0].setNodesValues(values);
+    }
+    public double[] getOutput(){
+        /// <summary>
+        /// Gets the values of the output layer
+        /// </summary>
+        /// <returns>double[] : Array of doubles containing the values of the output layer</returns>
+        return layers[layers.Length - 1].getNodesValues(); 
     }
 }
 
@@ -85,13 +83,20 @@ class Layer
     /// <value>Property <c>Node[] : nodes</c> represents the nodes in the layer.</value>
 
     Node[] nodes;
-    Layer(int numberOfNodes)
+    public Layer(int numberOfNodes, int numberOfNodesInPreviousLayer)
     {
         /// <summary>
         /// Group of nodes that represents a series of decisions
         /// </summary>
         /// <param name="int : numberOfNodes">Number of nodes in this layer</param>
+        /// <param name="int : numberOfNodesInPreviousLayer">Number of nodes in the previous layer</param>
+        
         nodes = new Node[numberOfNodes];
+        
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i] = new Node(numberOfNodesInPreviousLayer);
+        }
     }
     public void randomWeights()
     {
@@ -116,10 +121,9 @@ class Layer
 
         for (int i = 0; i < nodes.Length; i++)
         {
-            nodes[i].calculate(previousLayer);
+            nodes[i].calculate(previousLayer.getNodesValues());
         }
     }
-
     public Node[] getNodes()
     {
         /// <summary>
@@ -128,14 +132,47 @@ class Layer
         /// <returns>Node[] : Array of nodes in the layer</returns>
         return nodes;
     }
-
+    public double[] getNodesValues()
+    {
+        /// <summary>
+        /// Gets the values of the nodes in the layer
+        /// </summary>
+        /// <returns>double[] : Array of doubles containing the values of the nodes in the layer</returns>
+        
+        double[] values = new double[nodes.Length];
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            values[i] = nodes[i].getValue();
+        }
+        return values;
+    }
     public void setNodes(Node[] nodes)
     {
         /// <summary>
         /// Sets the nodes in the layer
+        /// !(Mostly usless)!
         /// </summary>
         /// <param name="Node[] : nodes">Array of nodes in the layer</param>
         this.nodes = nodes;
+    }
+    public void setNodesValues(double[] values)
+    {
+        /// <summary>
+        /// Sets the values of the nodes in the layer
+        /// </summary>
+        /// <param name="double[] : values">Array of doubles containing the values to be loaded in the nodes</param>
+        /// <exception cref="LayerLengthMismatch">
+        /// Thrown when the array lengths of the values and the nodes in the layer do not correspond.
+        /// </exception>
+        
+        if (nodes.Length != values.Length)
+        {
+            throw new LayerLengthMismatch("The length of the input values array is different from the number of nodes in the input layer");
+        }
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i].setValue(values[i]);
+        }
     }
 }
 
@@ -170,15 +207,16 @@ class Node
     public void randomWeights()
     {
         /// <summary>
-        /// Randomizes the weights of the node
+        /// Randomizes the weights of the node.
         /// </summary>
+        
         Random random = new Random();
-        for (int i = 0; i < weights.Length; i++)
+        for (int i = 0; i < connectedWeights.Length; i++)
         {
-            weights[i] = random.NextDouble();
+            connectedWeights[i] = random.NextDouble();
         }
     }
-    public void calculate(Layer previousLayer)
+    public void calculate(double[] previousLayerValues)
     {
         /// <summary>
         /// !!!IMPORTANT!!!
@@ -187,23 +225,48 @@ class Node
         /// Calculate and sets the value of this node trough the values of the previous nodes, their weights and the bias.
         ///
         /// </summary>
-        /// <param name="Layer : previousLayer">Layer containing the previous nodes</param>
+        /// <param name="double[] : previousLayerValues">Array containing previous layer's nodes values</param>
 
         double tempValue = 0f;
-        Node[] previousLayerNodes = previousLayer.getNodes();
 
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < previousLayerValues.Length; i++)
         {
-            tempValue += previousLayerNodes[i].getValue() * connectedWeights[i];
+            tempValue += previousLayerValues[i] * connectedWeights[i];
         }
 
-        //Sigmoid
         this.value = sigmoid(tempValue + bias);
+    }
+    public void setBias(double bias)
+    {
+        /// <summary>
+        /// Sets the bias of the node.
+        /// </summary>
+        /// <param name="double : bias">Bias to be set</param>
+
+        this.bias = bias;
+    }
+    public double getBias()
+    {
+        /// <summary>
+        /// Gets the bias of the node.
+        /// </summary>
+        /// <returns>double : bias of this node</returns>
+
+        return this.bias;
+    }
+    public double modBias(double biasVariation)
+    {
+        /// <summary>
+        /// Gets the bias of the node.
+        /// </summary>
+        /// <param name="double : biasVariation">Bias variation to be added</param>
+
+        this.bias += biasVariation;
     }
     public void setValue(double value)
     {
         /// <summary>
-        /// Sets the value of the node
+        /// Sets the value of the node.
         /// </summary>
         /// <param name="double : value">Value to be set</param>
 
@@ -218,7 +281,6 @@ class Node
 
         return this.value;
     }
-
     private double sigmoid(double value)
     {
         /// <summary>
