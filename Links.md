@@ -11,6 +11,6 @@
 
 
 ## Haptic knob - Progetto 1
-
+https://www.amazon.com/Display-Resolution-Interface-Viewing-Instrument/dp/B08GKLDYT8?crid=1B7XMRNS1IQEB&keywords=Gc9a01&qid=1654747590&sprefix=gc9a01,aps,118&sr=8-6&linkCode=sl1&tag=bezeklabs-20&linkId=879c17fa3b5c565232a02b534a83a243&language=en_US&ref_=as_li_ss_tl
 - [*Schermino*](https://www.amazon.it/pollici-Rotondo-Raspberry-Utilizzando-Incorporato/dp/B095X1JDCM/ref=sr_1_13?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=DN35HV5P7TUH&keywords=monitor+tondo&qid=1679659138&sprefix=monitor+tono%2Caps%2C150&sr=8-13)
 - [*Motore cardanico senza spazzole*](https://www.amazon.it/BESSTUUP-albero-cardanico-spazzola-Quadcopter/dp/B0BY7VSLZB/ref=sr_1_3?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=24K7IMLCZVR7Q&keywords=motore+cardanico+senza+spazzole&qid=1679659086&sprefix=motore+cardanico+senza+spazzole%2Caps%2C308&sr=8-3)
