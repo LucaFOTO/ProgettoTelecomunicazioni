@@ -15,6 +15,8 @@
 
 ### Documentazione monitor
 
+- [Documentazione ufficiale monitor](https://www.waveshare.com/wiki/1.28inch_LCD_Module?Amazon#Install_Libraries)
+
 ### Documentazione sensore
 - [Pinout sensore](https://vi.aliexpress.com/item/32948552958.html?gatewayAdapt=glo2vnm)
 
